@@ -1,5 +1,6 @@
 package com.linkly.link
 
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,7 +17,7 @@ class LinkController(private val linkService: LinkService) {
 
     @PostMapping("/api/links")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createShortUrl(@RequestBody request: CreateLinkRequest) : LinkResponse {
+    fun createShortUrl(@Valid @RequestBody request: CreateLinkRequest) : LinkResponse {
         return linkService.create(request.url)
     }
 
