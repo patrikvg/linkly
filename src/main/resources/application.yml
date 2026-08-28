@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: linkly
+  datasource:
+    url: jdbc:postgresql://localhost:5432/linkly
+    username: linkly
+    password: linkly
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
