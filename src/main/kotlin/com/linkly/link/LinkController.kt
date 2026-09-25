@@ -3,6 +3,7 @@ package com.linkly.link
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -29,12 +30,25 @@ class LinkController(private val linkService: LinkService) {
 
     @GetMapping("/r/{code}")
     fun redirect(@PathVariable code: String) : ResponseEntity<Void> {
-        val link = linkService.findByCode(code)
+        val link = linkService.registerClick(code)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown short code")
 
         return ResponseEntity
             .status(HttpStatus.FOUND)
             .location(URI.create(link.url))
+            .build()
+    }
+    
+    @DeleteMapping("/api/links/{code}")
+    fun deleteShortUrl(@PathVariable code: String) : ResponseEntity<Void> {
+        val shortUrl = linkService.delete(code)
+        
+        if (!shortUrl) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown short code")
+        }
+        
+        return ResponseEntity
+            .noContent()
             .build()
     }
 }

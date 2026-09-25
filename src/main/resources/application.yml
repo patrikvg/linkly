@@ -5,7 +5,11 @@ spring:
     url: jdbc:postgresql://localhost:5432/linkly
     username: linkly
     password: linkly
+  sql:
+    init:
+      mode: always
   jpa:
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
     open-in-view: false

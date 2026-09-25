@@ -9,5 +9,6 @@ import jakarta.persistence.Table
 data class LinkEntity(
     @Id
     val code: String,
-    val url: String
+    val url: String,
+    var clicks: Int = 0
 )

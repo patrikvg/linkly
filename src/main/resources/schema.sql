@@ -1,0 +1,2 @@
+ALTER TABLE links
+    ADD COLUMN IF NOT EXISTS clicks integer NOT NULL DEFAULT 0;
