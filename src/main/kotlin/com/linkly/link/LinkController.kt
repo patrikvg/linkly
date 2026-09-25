@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
@@ -37,6 +38,15 @@ class LinkController(private val linkService: LinkService) {
             .status(HttpStatus.FOUND)
             .location(URI.create(link.url))
             .build()
+    }
+    
+    @GetMapping("/api/links") // GetMapping Status default is 200-OK
+    
+    fun getAll(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "20") size: Int
+    ) : LinkPageResponse {
+        return linkService.findAllShortUrlWithPageable(page, size)
     }
     
     @DeleteMapping("/api/links/{code}")

@@ -1,7 +1,9 @@
 package com.linkly.link
 
 import org.hibernate.annotations.NotFound
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import java.awt.print.Pageable
 
 @Service
 class LinkService(private val repository: LinkRepository) {
@@ -69,5 +71,31 @@ class LinkService(private val repository: LinkRepository) {
         val shortUrl = repository.findByCode(code) ?: return false
         repository.delete(shortUrl)
         return true
+    }
+    
+    fun findAllShortUrl() : List<LinkResponse> {
+        // findAll ist eine eingebaute JpaRepository Mehode (LinkRepository.kt)
+        val allShortUrl = repository.findAll()
+            .map { url -> LinkResponse(url.code, url.url, "/r/${url.code}", url.clicks)}
+            
+        return allShortUrl
+    }
+    
+    fun findAllShortUrlWithPageable(page: Int, size: Int) : LinkPageResponse {
+        val pageable = PageRequest.of(page, size)
+        val result = repository.findAll(pageable)
+        
+        // comverting the Page<LinkEntity> into a LinkResponse
+        val links = result.content.map { entity ->
+            LinkResponse(entity.code, entity.url, "/r/${entity.code}", entity.clicks)
+        }
+        
+        return LinkPageResponse(
+            content = links,
+            page = result.number,
+            size = result.size,
+            totalElements = result.totalElements,
+            totalPages = result.totalPages
+        )
     }
 }
